@@ -40,7 +40,7 @@ def room(choice, rooms_list):
     choice.start = 1
     choice.end = len(room_objects)
 
-    print("\nYou find the follow objects: ")
+    print("\nYou find the following objects: ")
     for r in objects.get(choice.current_room):
         print(f"{count}) {r}")
         count += 1
@@ -103,13 +103,11 @@ while(choice.answer != "quit" or quit_game != False):
 
     # Start first task        
     if game_started == True: 
-        select_action(choice, current_room)
+        select_action(choice, choice.current_room)
         if choice.answer == "1":
             room(choice, rooms_list)
-            quit()
         elif choice.answer == "2":
             location(choice, rooms_list)
-            quit()
         else:
             if choice.answer != "quit":
                 print("\nInvalid response. Please try again!")
