@@ -1,4 +1,4 @@
-# escape-room
+# escape-room-game
 
 Two game modes:  
     1) secret_object.py  
