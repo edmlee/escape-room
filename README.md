@@ -7,6 +7,9 @@ Two game modes:
 ----------------------------
 1) Secret Object Game
 ----------------------------
+Required Files: "secret_layout.txt"  
+Other Files: "room_layout.png"  
+
 Find the secret object to win the game  
 How to play:  
     1. Run "secret_object.py"  
@@ -28,6 +31,9 @@ The code will automatically update these new additions.
 ----------------------------
 2) Escape Room Game
 ----------------------------
+Required Files: "escape_layout.txt", "responses.txt"  
+Other Files: "room_layout.png"  
+
 Find the exit and leave the building to win the game  
 Advanced version of the Secret Object Game  
 The starting location will be fixed  

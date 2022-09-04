@@ -2,7 +2,6 @@ import random
 import time
 import os
 
-
 class Choice():
     def __init__(self, answer, start, end):
         self.answer = answer.lower().strip()
@@ -24,27 +23,46 @@ def create_items(choice):
 
     choice.objects = {choice.rooms_list[i]:j for i, j in enumerate(choice.room_objects)}
     choice.connected = {choice.rooms_list[i]:j for i, j in enumerate(choice.connected_index)}
+    choice.current_room = choice.rooms_list[0]
 
-    # Randomly select the secret object
-    choice.current_room = random.choice(choice.rooms_list)
-    choice.random_room = random.choice(choice.rooms_list)
-    choice.random_object = random.choice(choice.objects.get(choice.random_room))
-    choice.random_object_index = choice.objects.get(choice.random_room).index(choice.random_object)
-    
-    # Display details in the terminal. For testing purposes only. It should be commented out!
-    # print(f"Secret room is: {choice.random_room}")
-    # print(f"List of objects: {choice.objects.get(choice.random_room)}")
-    # print(f"Secret object is: {choice.random_object}")
-    # print(f"Secret object index is: {choice.random_object_index}")
+# Display floor plan of the building
+def layout():
+    file_name = "escape_layout.txt"
+    if os.path.exists(file_name):
+        file = open(file_name, "r")
+        lines = file.readlines()
+
+        for line in lines:
+            line = line.rstrip("\n")
+            print(line)
+        file.close()
+    else:
+        print("> Missing file required to start the game")
+        print(f"> Please import {file_name} into the same directory")
+        quit()
+    if input("Enter any key to continue: ") == "quit":
+        quit()
+
+
+# Provide randomly ordered responses from a text file when users interact with an object
+def get_responses(choice):
+    file_name = "responses.txt"
+    if os.path.exists(file_name):
+        file = open(file_name, "r")
+        choice.responses = file.readlines()
+        random.shuffle(choice.responses)
+        file.close()
+    else:
+        print("Missing file required to start the game")
+        print(f"> Please import {file_name} into the same directory")
+        quit()
 
 
 # Start menu
 def start_game(choice, start_delay, game_started, floor_plan):
     if game_started == False:
         if choice.answer == "yes":
-            name = input("Please enter your name: ")
-            print(f"Welcome to the hidden object game {name}")
-            print("Find the secret object to win the game. Let's begin!")
+            print("You have been locked in an unknown house. Find the exit!")
             time.sleep(start_delay)
             game_started = True
         elif choice.answer == "no":
@@ -53,7 +71,7 @@ def start_game(choice, start_delay, game_started, floor_plan):
         else:
             print("\nInvalid response. Please try again!")
             choice.answer = input("Do you want to play (yes/no)? ")
-        
+
     # Show the option to view the floor plan
     if game_started == True and floor_plan == False:
         choice.answer = input("Would you like to view floor plan (yes/no)? ")
@@ -66,7 +84,7 @@ def start_game(choice, start_delay, game_started, floor_plan):
             print("\nInvalid response. Please try again!")
 
     # Start selection phase
-    if game_started == True and floor_plan == True: 
+    else:
         select_action(choice)
         if choice.answer == "1":
             room(choice)
@@ -78,25 +96,6 @@ def start_game(choice, start_delay, game_started, floor_plan):
             if choice.answer != "quit":
                 print("\nInvalid response. Please try again!")
     return game_started, floor_plan
-
-
-# Display floor plan of the building
-def layout():
-    file_name = "secret_layout.txt"
-    if os.path.exists(file_name):
-        file = open(file_name, "r")
-        lines = file.readlines()
-
-        for line in lines:
-            line = line.rstrip("\n")
-            print(line)
-        file.close()
-    else:
-        print("> Missing file required to start the game")
-        print(f"> Please import {file_name} into the same directory")
-    if input("Enter any key to continue: ") == "quit":
-        quit()
-    
 
 # Track user's input
 def selection(choice):
@@ -127,7 +126,7 @@ def room(choice):
         for r in choice.objects.get(choice.current_room):
             print(f"{count}) {r}")
             count += 1
-        
+       
         print(f"{choice.end}) Go back")
         selection(choice)
         flag = check_objects(choice, flag)
@@ -155,7 +154,6 @@ def location(choice):
             choice.current_room = choice.rooms_list[index[int(choice.answer) - 1]]
         else:
             print("\nInvalid response. Please try again!")
-
         print(f"New location: {choice.current_room}")
 
 
@@ -165,31 +163,28 @@ def check_objects(choice, flag):
         int(choice.answer)
     except ValueError:
         print("Invalid response. Please try again!")
-    else:
-        # Winning condition
-        if choice.current_room == choice.random_room and (int(choice.answer) - 1) == choice.random_object_index:
-            print(f"Congratulations! You have found the secret object [{choice.random_object}] in the [{choice.random_room}]")
-            quit()        
-        elif choice.answer == str(choice.end):
+    else:     
+        if choice.answer == str(choice.end):
             flag = True
         elif int(choice.answer) in list(range(1, choice.end)):
-            print("There's nothing there. Please try again")
+            response = random.choice(choice.responses)
+            print(response.rstrip("\n"))
             time.sleep(choice.delay)
         else:
             print("\nInvalid response. Please try again!")
         return flag
-
+    
 
 # Main
-menu_options = 3
 start_delay = 1
 game_started = False
 floor_plan = False
 
 choice = input("Do you want to play (yes/no)? ")
-choice = Choice(choice, 1, menu_options)
-choice.delay = 1
+choice = Choice(choice, 1, 3)
+choice.delay = 3
 create_items(choice)
+get_responses(choice)
 
-while(choice.answer != "quit" or floor_plan == False):    
+while(choice.answer != "quit"):    
     game_started, floor_plan = start_game(choice, start_delay, game_started, floor_plan)
