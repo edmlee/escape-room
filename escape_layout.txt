@@ -1,17 +1,12 @@
-Outdoor <--> Garage <--> Kitchen <--> Living Room <--> Bedroom <--> Bathroom
-                           ____________ ____________
-                          |            |            |
-                          |            |            |
-                          |   Bedroom  |  Bathroom  |
-                          |            |            |
-              ____________|____________|____________| 
-             |            |            |
-             |            |            |
-             |   Kitchen  |   Living   |
-             |            |    Room    |
- ____________|____________|____________|
-|            |            |
-|            |            |
-|   Outdoor  |   Garage   |
-|            |            |
-|____________|____________|
+             _____ _____
+            |     |     |
+            |  Be    Ba |
+       _____|_   _|_____|
+      |     |     |    
+      |  K     L  |    Ba = Bathroom
+ _____|_   _|_____|    Be = Bedroom
+|     |     |          L  = Living Room
+   O     G  |          K  = Kitchen
+|_____|_____|          G  = Garage
+                       O  = Outdoor
+
