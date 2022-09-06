@@ -32,8 +32,28 @@ def create_items(choice):
     choice.objects = {choice.rooms_list[i]:j for i, j in enumerate(choice.room_objects)}
     choice.connected = {choice.rooms_list[i]:j for i, j in enumerate(choice.connected_index)}
 
-    # Randomly select the location for the special keys used to unlock the exit
-    
+    # Randomize the colours of the special keys used to unlock the exit
+    special_room_objects = []
+    special_room = ""
+    special_object = ""
+    colours = "Red, Green, Blue, Orange, Yellow, Black, White, Pink, Purple"
+    colours = colours.split(", ")
+    check = True
+    for index, colour in enumerate(colours):
+        colours[index] = colour + " Key"
+    random.shuffle(colours)
+
+    # Randomize the location of the special keys
+    # for i in range(choice.number_of_keys):
+        # Special keys should not be located at the exit door
+    while check or len(special_room_objects) == choice.number_of_keys:
+        special_room = random.choice(list(choice.objects.keys()))
+        special_object = random.choice(choice.objects[special_room])
+        if (special_room != choice.exit_room and special_object != choice.exit_object and 
+                [special_room , special_object] not in special_room_objects):
+            special_room_objects.append([special_room, special_object])
+    choice.special_keys = dict(zip(colours, special_room_objects))
+    print(choice.special_keys)
 
 
 def load_file(file_name):
