@@ -23,7 +23,7 @@ The conditions have been randomly generated. This includes the:
     3. Secret object  
 
 The connected rooms are fixed and have not been randomly generated.  
-Check the "room_layout.png" file for more information about the room layouts.  
+Check the "floor_plan.png" file for more information about the room layouts.  
 
 New rooms and objects can be added into the game without affecting the gameplay.  
 The code will automatically update these new additions.  

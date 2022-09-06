@@ -1,6 +1,5 @@
 import random
 import time
-import os
 
 
 class Choice():
@@ -39,10 +38,10 @@ def create_items(choice):
 
 
 def load_file(file_name):
-    if os.path.exists(file_name):
-        file = open(file_name, "r")
-        lines = file.readlines()
-    else:
+    try:
+        with open(file_name, "r") as file:
+            lines = file.readlines()
+    except:
         missing_file(file_name)
         quit()
     return lines
@@ -63,7 +62,7 @@ def print_layout(choice):
         quit()
 
 
-# Start menu
+# Start screen
 def start_game(choice, start_delay, game_started, floor_plan):
     if game_started == False and floor_plan == False:
         if choice.answer.lower().strip() == "yes":
@@ -90,11 +89,11 @@ def start_game(choice, start_delay, game_started, floor_plan):
         else:
             print("Invalid response. Please try again!")
 
-    # Start selection phase
+    # Main menu inputs
     elif game_started == True and floor_plan == True:
         select_action(choice)
         if choice.answer.lower().strip() == "1":
-            room(choice)
+            display_objects(choice)
         elif choice.answer.lower().strip() == "2":
             location(choice)
         elif choice.answer.lower().strip() == "3":
@@ -113,7 +112,7 @@ def selection(choice):
         choice.answer = input(f"Make your selection ({choice.start}): ")
 
 
-# Menu screen for the main actions
+# Main menu screen
 def select_action(choice):
     print(f"\nYou are in the {choice.current_room}:")
     print("1) Explore The Room")
@@ -122,8 +121,8 @@ def select_action(choice):
     selection(choice)
 
 
-# Menu screen for the objects in a room
-def room(choice):
+# Display list of objects
+def display_objects(choice):
     choice.start = 1
     choice.end = len(choice.objects.get(choice.current_room)) + 1
     flag = False
@@ -140,7 +139,7 @@ def room(choice):
         flag = check_objects(choice, flag)
 
 
-# Menu screen for the connected rooms
+# Change locations
 def location(choice):
     count = 1
     print("\nWhere would you like to go?")
@@ -151,7 +150,6 @@ def location(choice):
     index = {i:j for i, j in enumerate(choice.connected.get(choice.current_room))}
     choice.end = count - 1
 
-    # Change rooms
     selection(choice)
     try:
         int(choice.answer.lower().strip())
@@ -164,8 +162,6 @@ def location(choice):
         else:
             print("Invalid response. Please try again!")
             location(choice)
-
-        print(f"New location: {choice.current_room}")
 
 
 # Check objects in each room
@@ -186,7 +182,7 @@ def check_objects(choice, flag):
             time.sleep(choice.delay)
         else:
             print("Invalid response. Please try again!")
-        return flag
+    return flag
 
 
 # Main
