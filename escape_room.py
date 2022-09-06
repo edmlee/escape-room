@@ -1,5 +1,7 @@
 import random
 import time
+from tkinter.messagebox import YES
+
 
 class Choice():
     def __init__(self, answer, start, end):
@@ -8,7 +10,7 @@ class Choice():
         self.end = end
 
 
-# Create all the objects in the game. Can add or remove items from the lists.
+# Create all the objects in the game
 def create_items(choice):
     choice.rooms_list = ["Living Room", "Bedroom", "Bathroom", "Kitchen", "Garage"]
     choice.room_objects = [ ["Couch", "Rug", "Plant", "TV", "Shelf"],
@@ -16,13 +18,22 @@ def create_items(choice):
                             ["Cabinet", "Toilet", "Basin", "Bathtub", "Towel"],
                             ["Cabinet", "Sink", "Microwave", "Oven", "Fridge"],
                             ["Tools Rack", "Car Trunk", "Spare Tire", "Box", "Door"], ]
+    choice.inventory = set()
     
     # Select which rooms are connected to each other. Check "floor_plan.png" for more info
     choice.connected_index = [[1, 3], [0, 2], [1], [0, 4], [3]]
 
+    # Set the start and exit locations
+    choice.current_room = choice.rooms_list[0]
+    choice.exit_room = choice.rooms_list[4]
+    choice.exit_object = choice.room_objects[4][4]
+
+    # Link the objects to their corresponding rooms
     choice.objects = {choice.rooms_list[i]:j for i, j in enumerate(choice.room_objects)}
     choice.connected = {choice.rooms_list[i]:j for i, j in enumerate(choice.connected_index)}
-    choice.current_room = choice.rooms_list[0]
+
+    # Randomly select the location for the special keys used to unlock the exit
+    
 
 
 def load_file(file_name):
@@ -51,11 +62,17 @@ def print_layout(choice):
 
 
 # Start screen
-def start_game(choice, start_delay, game_started, floor_plan):
+def start_game(choice, game_started, floor_plan):
     if game_started == False and floor_plan == False:
         if choice.answer.lower().strip() == "yes":
             print("You have been locked in an unknown house. Find the exit!")
-            time.sleep(start_delay)
+            time.sleep(choice.delay)
+            print("Wait, what's this...? Looks like a floor plan of the building")
+            time.sleep(choice.delay)
+            print("Now we know where the exit is! Hope it's not locked though...")
+            time.sleep(choice.delay)
+            print("...")
+            time.sleep(choice.delay)
             game_started = True
         elif choice.answer.lower().strip() == "no":
             print("Maybe next time. Bye")
@@ -157,7 +174,8 @@ def check_objects(choice, flag):
         int(choice.answer.lower().strip())
     except ValueError:
         print("Invalid response. Please try again!")
-    else:     
+    else:
+
         if choice.answer.lower().strip() == str(choice.end):
             flag = True
         elif int(choice.answer.lower().strip()) in list(range(1, choice.end)):
@@ -170,7 +188,6 @@ def check_objects(choice, flag):
     
 
 # Main
-start_delay = 1
 game_started = False
 floor_plan = False
 file_escape_layout = "escape_layout.txt"
@@ -178,13 +195,16 @@ file_responses = "responses.txt"
 
 choice = input("Do you want to play (yes/no)? ")
 choice = Choice(choice, 1, 3)
-choice.delay = 3
-
-create_items(choice)
 choice.layout = load_file(file_escape_layout)
 choice.responses = load_file(file_responses)
-
 random.shuffle(choice.responses)
+# Default delay = 3
+choice.delay = 0
+choice.number_of_keys = 3
+choice.locked = True
+choice.objects_found = False
+
+create_items(choice)
 
 while(choice.answer.lower().strip() != "quit"):    
-    game_started, floor_plan = start_game(choice, start_delay, game_started, floor_plan)
+    game_started, floor_plan = start_game(choice, game_started, floor_plan)
