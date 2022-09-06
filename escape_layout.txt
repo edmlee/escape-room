@@ -6,7 +6,7 @@
       |  K     L  |    Ba = Bathroom
  _____|_   _|_____|    Be = Bedroom
 |     |     |          L  = Living Room
-   O     G  |          K  = Kitchen
+   E     G  |          K  = Kitchen
 |_____|_____|          G  = Garage
-                       O  = Outdoor
+                       E  = Exit
 
