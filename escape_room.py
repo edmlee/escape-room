@@ -73,6 +73,7 @@ def missing_file(file_name):
 
 # Display layout for the floor plan
 def print_layout(choice):
+    # time.sleep(choice.delay_msg)
     for line in choice.layout:
         line = line.rstrip("\n")
         print(line)
@@ -90,6 +91,7 @@ def start_game(choice, game_started, floor_plan):
             print("Wait, what's this...? Looks like a floor plan of the building")
             print("Now we know where the exit is! Hope it's not locked though...")
             print("---")
+            time.sleep(choice.delay_msg)
             check_continue = input("Enter any key to continue: ")
             if check_continue.lower().strip() == "quit":
                 quit()
@@ -112,21 +114,25 @@ def start_game(choice, game_started, floor_plan):
         else:
             print("Invalid response. Please try again!")
 
-    # Main menu inputs
     elif game_started == True and floor_plan == True:
-        select_action(choice)
-        if choice.answer.lower().strip() == "1":
-            display_objects(choice)
-        elif choice.answer.lower().strip() == "2":
-            location(choice)
-        elif choice.answer.lower().strip() == "3":
-            print_layout(choice)
-        elif choice.answer.lower().strip() == "4":
-            show_inventory(choice)
-        else:
-            if choice.answer.lower().strip() != "quit":
-                print("Invalid response. Please try again!")
+        main_menu(choice)
     return game_started, floor_plan
+
+
+# Main menu inputs
+def main_menu(choice):
+    select_action(choice)
+    if choice.answer.lower().strip() == "1":
+        display_objects(choice)
+    elif choice.answer.lower().strip() == "2":
+        location(choice)
+    elif choice.answer.lower().strip() == "3":
+        print_layout(choice)
+    elif choice.answer.lower().strip() == "4":
+        show_inventory(choice)
+    else:
+        if choice.answer.lower().strip() != "quit":
+            print("Invalid response. Please try again!")
 
 
 # Track user's input
@@ -151,6 +157,7 @@ def select_action(choice):
         print(f"{count}) {option}")
         count += 1
 
+    choice.end = choice.menu_options
     selection(choice)
 
 
@@ -182,23 +189,22 @@ def location(choice):
     print(f"{count}) Go back")
 
     index = {i:j for i, j in enumerate(choice.connected.get(choice.current_room))}
-    choice.end = count - 1
-
+    choice.end = count
     selection(choice)
+
     try:
         int(choice.answer.lower().strip())
     except ValueError:
         print("Invalid response. Please try again!")
         location(choice)
     else:
-        if int(choice.answer.lower().strip()) in list(range(choice.start, choice.end + 1)):
-            choice.current_room = choice.rooms_list[index[int(choice.answer.lower().strip()) - 1]]
-        elif int(choice.answer.lower().strip()) == count:
-            select_action(choice)
+        if int(choice.answer.lower().strip()) in list(range(choice.start, choice.end)):
+                choice.current_room = choice.rooms_list[index[int(choice.answer.lower().strip()) - 1]]
+        elif int(choice.answer.lower().strip()) == choice.end:
+                main_menu(choice)
         else:
-            print("\nInvalid response. Please try again!")
+            print("Invalid response. Please try again!")
             location(choice)
-        print(f"New location: {choice.current_room}")
 
 
 # Check objects in each room
@@ -223,6 +229,7 @@ def check_objects(choice, flag):
                     print("Looks like you'll need to search around the house for these special keys")
                     print("Let's go back...")
                     print("---")
+                    time.sleep(choice.delay_msg)
                     check_continue = input("Enter any key to continue: ")
                     if check_continue.lower().strip() == "quit":
                         quit()
@@ -233,6 +240,7 @@ def check_objects(choice, flag):
                     print("You hear a click sound and the door slams wide open")
                     print("Finally... Now it's time to go back home...")
                     print("---")
+                    time.sleep(choice.delay_msg)
                     check_continue = input("Enter any key to continue: ")
                     print("Congratulations! You have successfully escaped. Thank you for playing!\n")
                     quit()
@@ -248,12 +256,13 @@ def check_objects(choice, flag):
                         else:
                             response = random.choice(choice.responses)
                             print(response.rstrip("\n"))
+                            time.sleep(choice.delay_msg)
 
             # Dislay a random message for other interactions
             else:
                 response = random.choice(choice.responses)
                 print(response.rstrip("\n"))
-            # time.sleep(choice.delay)
+                time.sleep(choice.delay_msg)
         else:
             print("Invalid response. Please try again!")
         return flag
@@ -266,26 +275,25 @@ def show_inventory(choice):
             print(item)
     else:
         print("None")
-    time.sleep(choice.delay)
+    time.sleep(choice.delay_msg)
         
 
-
 # Main
+menu_options = 4
 game_started = False
 floor_plan = False
 file_escape_layout = "escape_layout.txt"
 file_responses = "responses.txt"
 
 choice = input("Do you want to play (yes/no)? ")
-choice = Choice(choice, 1, 3)
+choice = Choice(choice, 1, menu_options)
 choice.layout = load_file(file_escape_layout)
 choice.responses = load_file(file_responses)
 random.shuffle(choice.responses)
-choice.delay = 0
-# choice.delay = 3
+choice.delay_msg = 1
+choice.delay = 3
 choice.number_of_keys = 3
-choice.locked = True
-choice.objects_found = False
+choice.menu_options = menu_options
 
 create_items(choice)
 
