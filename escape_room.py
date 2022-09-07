@@ -53,7 +53,7 @@ def create_items(choice):
     choice.special_keys = dict(zip(colours, special_room_objects))
     
     # Show locations of the keys. Leave as a comment
-    print(choice.special_keys)
+    # print(choice.special_keys)
 
 
 def load_file(file_name):
@@ -162,7 +162,7 @@ def display_objects(choice):
 
     while flag != True:
         count = 1
-        print("\nYou find the following objects: ")
+        print(f"\nYou find the following objects in the {choice.current_room}: ")
         for r in choice.objects.get(choice.current_room):
             print(f"{count}) {r}")
             count += 1
@@ -179,6 +179,7 @@ def location(choice):
     for r in choice.connected.get(choice.current_room):
         print(f"{count}) {choice.rooms_list[r]}")
         count += 1
+    print(f"{count}) Go back")
 
     index = {i:j for i, j in enumerate(choice.connected.get(choice.current_room))}
     choice.end = count - 1
@@ -192,6 +193,8 @@ def location(choice):
     else:
         if int(choice.answer.lower().strip()) in list(range(choice.start, choice.end + 1)):
             choice.current_room = choice.rooms_list[index[int(choice.answer.lower().strip()) - 1]]
+        elif int(choice.answer.lower().strip()) == count:
+            select_action(choice)
         else:
             print("\nInvalid response. Please try again!")
             location(choice)
@@ -214,7 +217,7 @@ def check_objects(choice, flag):
             if choice.current_room == choice.exit_room and current_object  == choice.exit_object:
                 if len(choice.inventory) != choice.number_of_keys:
                     print("---")
-                    print("This must be the exit marked on the map")
+                    print("This must be the exit that was marked on the floor plan")
                     print("But it seems to be locked...")
                     print(f"There's {choice.number_of_keys} coloured padlocks on the door")
                     print("Looks like you'll need to search around the house for these special keys")
@@ -229,13 +232,22 @@ def check_objects(choice, flag):
                     print("You carefully insert all the keys to their corresponding padlocks")
                     print("You hear a click sound and the door slams wide open")
                     print("Finally... Now it's time to go back home...")
-                    print("Congratulations! You have successfully escaped. Thank you for playing!")
                     print("---")
+                    check_continue = input("Enter any key to continue: ")
+                    print("Congratulations! You have successfully escaped. Thank you for playing!\n")
                     quit()
+
             # Check for special keys
-            if [choice.current_room, current_object] in choice.special_keys.values():
-                    print(f"Found special item [{0}]")
-                    choice.sleep(3)
+            elif [choice.current_room, current_object] in choice.special_keys.values():
+                for key_colour, room_object in choice.special_keys.items():
+                    if [room_object[0], room_object[1]] == [choice.current_room, current_object]:
+                        if key_colour not in choice.inventory:
+                            print(f"Found special item [{key_colour}]")
+                            choice.inventory.add(key_colour)
+                            time.sleep(choice.delay)
+                        else:
+                            response = random.choice(choice.responses)
+                            print(response.rstrip("\n"))
 
             # Dislay a random message for other interactions
             else:
