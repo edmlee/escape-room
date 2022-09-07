@@ -1,6 +1,5 @@
 import random
 import time
-from tkinter.messagebox import YES
 
 
 class Choice():
@@ -44,15 +43,16 @@ def create_items(choice):
     random.shuffle(colours)
 
     # Randomize the location of the special keys
-    # for i in range(choice.number_of_keys):
-        # Special keys should not be located at the exit door
-    while check or len(special_room_objects) == choice.number_of_keys:
+    while len(special_room_objects) != choice.number_of_keys:
         special_room = random.choice(list(choice.objects.keys()))
         special_object = random.choice(choice.objects[special_room])
+        # Special keys should not be located at the exit door. Also remove duplicates
         if (special_room != choice.exit_room and special_object != choice.exit_object and 
                 [special_room , special_object] not in special_room_objects):
             special_room_objects.append([special_room, special_object])
     choice.special_keys = dict(zip(colours, special_room_objects))
+    
+    # Show locations of the keys. Leave as a comment
     print(choice.special_keys)
 
 
@@ -137,10 +137,18 @@ def selection(choice):
 
 # Main menu screen
 def select_action(choice):
+    menu_screen = []
+    menu_screen.append("Explore The Room")
+    menu_screen.append("Change Locations")
+    menu_screen.append("View Floor Plan")
+    menu_screen.append("Open Inventory")
+    count = 1
+
     print(f"\nYou are in the {choice.current_room}:")
-    print("1) Explore The Room")
-    print("2) Change Locations")
-    print("3) View Floor Plan")
+    for option in menu_screen:
+        print(f"{count}) {option}")
+        count += 1
+
     selection(choice)
 
 
