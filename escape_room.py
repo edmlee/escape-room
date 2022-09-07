@@ -85,14 +85,14 @@ def print_layout(choice):
 def start_game(choice, game_started, floor_plan):
     if game_started == False and floor_plan == False:
         if choice.answer.lower().strip() == "yes":
+            print("---")
             print("You have been locked in an unknown house. Find the exit!")
-            time.sleep(choice.delay)
             print("Wait, what's this...? Looks like a floor plan of the building")
-            time.sleep(choice.delay)
             print("Now we know where the exit is! Hope it's not locked though...")
-            time.sleep(choice.delay)
-            print("...")
-            time.sleep(choice.delay)
+            print("---")
+            check_continue = input("Enter any key to continue: ")
+            if check_continue.lower().strip() == "quit":
+                quit()
             game_started = True
         elif choice.answer.lower().strip() == "no":
             print("Maybe next time. Bye")
@@ -121,6 +121,8 @@ def start_game(choice, game_started, floor_plan):
             location(choice)
         elif choice.answer.lower().strip() == "3":
             print_layout(choice)
+        elif choice.answer.lower().strip() == "4":
+            show_inventory(choice)
         else:
             if choice.answer.lower().strip() != "quit":
                 print("Invalid response. Please try again!")
@@ -203,17 +205,58 @@ def check_objects(choice, flag):
     except ValueError:
         print("Invalid response. Please try again!")
     else:
-
+        # Go back to the previous menu
         if choice.answer.lower().strip() == str(choice.end):
             flag = True
         elif int(choice.answer.lower().strip()) in list(range(1, choice.end)):
-            response = random.choice(choice.responses)
-            print(response.rstrip("\n"))
-            time.sleep(choice.delay)
+            current_object = choice.objects[choice.current_room][int(choice.answer.lower().strip()) - 1]
+            # Display special messages when interacting with the exit door
+            if choice.current_room == choice.exit_room and current_object  == choice.exit_object:
+                if len(choice.inventory) != choice.number_of_keys:
+                    print("---")
+                    print("This must be the exit marked on the map")
+                    print("But it seems to be locked...")
+                    print(f"There's {choice.number_of_keys} coloured padlocks on the door")
+                    print("Looks like you'll need to search around the house for these special keys")
+                    print("Let's go back...")
+                    print("---")
+                    check_continue = input("Enter any key to continue: ")
+                    if check_continue.lower().strip() == "quit":
+                        quit()
+                else:
+                    print("---")
+                    print("Looks like you have all the keys needed to open this door")
+                    print("You carefully insert all the keys to their corresponding padlocks")
+                    print("You hear a click sound and the door slams wide open")
+                    print("Finally... Now it's time to go back home...")
+                    print("Congratulations! You have successfully escaped. Thank you for playing!")
+                    print("---")
+                    quit()
+            # Check for special keys
+            if [choice.current_room, current_object] in choice.special_keys.values():
+                    print(f"Found special item [{0}]")
+                    choice.sleep(3)
+
+            # Dislay a random message for other interactions
+            else:
+                response = random.choice(choice.responses)
+                print(response.rstrip("\n"))
+            # time.sleep(choice.delay)
         else:
             print("Invalid response. Please try again!")
         return flag
-    
+
+
+def show_inventory(choice):
+    print("Current items in your inventory:")
+    if len(choice.inventory) > 0:
+        for item in choice.inventory:
+            print(item)
+    else:
+        print("None")
+    time.sleep(choice.delay)
+        
+
 
 # Main
 game_started = False
@@ -226,8 +269,8 @@ choice = Choice(choice, 1, 3)
 choice.layout = load_file(file_escape_layout)
 choice.responses = load_file(file_responses)
 random.shuffle(choice.responses)
-# Default delay = 3
 choice.delay = 0
+# choice.delay = 3
 choice.number_of_keys = 3
 choice.locked = True
 choice.objects_found = False
