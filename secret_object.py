@@ -185,19 +185,24 @@ def check_objects(choice, flag):
     return flag
 
 
-# Main
-menu_options = 3
-start_delay = 1
-game_started = False
-floor_plan = False
-file_secret_layout = "secret_layout.txt"
+def main():
+    menu_options = 3
+    start_delay = 1
+    game_started = False
+    floor_plan = False
+    file_secret_layout = "secret_layout.txt"
 
-choice = input("Do you want to play (yes/no)? ")
-choice = Choice(choice, 1, menu_options)
-choice.delay = 1
+    choice = input("Do you want to play (yes/no)? ")
+    choice = Choice(choice, 1, menu_options)
+    choice.delay = 1
 
-create_items(choice)
-choice.layout = load_file(file_secret_layout)
+    create_items(choice)
+    choice.layout = load_file(file_secret_layout)
 
-while(choice.answer.lower().strip() != "quit" or floor_plan == False):    
-    game_started, floor_plan = start_game(choice, start_delay, game_started, floor_plan)
+    while(choice.answer.lower().strip() != "quit" or floor_plan == False):    
+        game_started, floor_plan = start_game(choice, start_delay, game_started, floor_plan)
+
+
+if __name__ == "__main__":
+    main()
+    

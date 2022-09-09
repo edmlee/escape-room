@@ -278,24 +278,29 @@ def show_inventory(choice):
     time.sleep(choice.delay_msg)
         
 
-# Main
-menu_options = 4
-game_started = False
-floor_plan = False
-file_escape_layout = "escape_layout.txt"
-file_responses = "responses.txt"
+def main():
+    menu_options = 4
+    game_started = False
+    floor_plan = False
+    file_escape_layout = "escape_layout.txt"
+    file_responses = "responses.txt"
 
-choice = input("Do you want to play (yes/no)? ")
-choice = Choice(choice, 1, menu_options)
-choice.layout = load_file(file_escape_layout)
-choice.responses = load_file(file_responses)
-random.shuffle(choice.responses)
-choice.delay_msg = 1
-choice.delay = 3
-choice.number_of_keys = 3
-choice.menu_options = menu_options
+    choice = input("Do you want to play (yes/no)? ")
+    choice = Choice(choice, 1, menu_options)
+    choice.layout = load_file(file_escape_layout)
+    choice.responses = load_file(file_responses)
+    random.shuffle(choice.responses)
+    choice.delay_msg = 1
+    choice.delay = 3
+    choice.number_of_keys = 3
+    choice.menu_options = menu_options
 
-create_items(choice)
+    create_items(choice)
 
-while(choice.answer.lower().strip() != "quit"):    
-    game_started, floor_plan = start_game(choice, game_started, floor_plan)
+    while(choice.answer.lower().strip() != "quit"):    
+        game_started, floor_plan = start_game(choice, game_started, floor_plan)
+
+
+if __name__ == "__main__":
+    main()
+    
