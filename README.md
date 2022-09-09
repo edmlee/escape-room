@@ -1,19 +1,17 @@
-# escape-room-game
+# Escape Room Game
 
 Two game modes:  
-    1) secret_object.py  
-    2) escape-room.py  
+    1) Hidden Object Game  
+    2) Escape Room Game  
 
+Required Files: `secret_layout.txt`, `escape_layout.txt`, `responses.txt`  
 ----------------------------------
-1) Secret Object Game (Simple)
+1) Hidden Object Game  (Simple)
 ----------------------------------
-Required Files: "secret_layout.txt"  
-Other Files: "floor_plan.png"  
-
 Objective: Find the secret object to win the game  
 
 How to play:  
-1. Run "secret_object.py"  
+1. Run `secret_object.py` or select `Hidden Object Game` from the executable file  
 2. Follow the instructions and input values into the terminal  
 3. Type "quit" at the main menu to exit the game  
 4. The game will automatically terminate upon finding the secret object  
@@ -24,7 +22,7 @@ The conditions have been randomly generated. This includes the:
 -  Secret object itself  
 
 The connected rooms are fixed and have not been randomly generated.  
-Check the "floor_plan.png" file for more information about the room layouts. This can also be viewed in the game  
+Check the `floor_plan.png` file for more information about the room layouts. This can also be viewed in the game  
 
 New objects can be added into the game to increase the difficulty  
 The code will automatically update these new additions  
@@ -32,13 +30,10 @@ The code will automatically update these new additions
 ----------------------------------
 2) Escape Room Game (Advanced)
 ----------------------------------
-Required Files: "escape_layout.txt", "responses.txt"  
-Other Files: "floor_plan.png"  
-
 Objective: You are trapped in a house. Find the secret items to unlock the exit  
 
 How to play:  
-1. Run "escape-room.py"  
+1. Run `escape-room.py`  or select `Escape Room Game` from the executable file  
 2. Follow the instructions and input values into the terminal  
 3. Type "quit" at the main menu to exit the game  
 4. Find the secret items scattered around the house  
