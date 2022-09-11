@@ -1,5 +1,6 @@
 import random
 import time
+import sys
 
 
 class Choice():
@@ -62,7 +63,7 @@ def load_file(file_name):
             lines = file.readlines()
     except:
         missing_file(file_name)
-        quit()
+        sys.exit()
     return lines
 
 
@@ -79,7 +80,7 @@ def print_layout(choice):
         print(line)
     check_continue = input("Enter any key to continue: ")
     if check_continue.lower().strip() == "quit":
-        quit()
+        sys.exit()
 
 
 # Start screen
@@ -94,11 +95,13 @@ def start_game(choice, game_started, floor_plan):
             time.sleep(choice.delay_msg)
             check_continue = input("Enter any key to continue: ")
             if check_continue.lower().strip() == "quit":
-                quit()
+                sys.exit()
             game_started = True
         elif choice.answer.lower().strip() == "no":
             print("Maybe next time. Bye")
-            quit()
+            time.sleep(choice.delay_msg)
+            input("Enter any key to quit: ")
+            sys.exit()
         else:
             print("Invalid response. Please try again!")
             choice.answer = input("Do you want to play (yes/no)? ")
@@ -232,7 +235,7 @@ def check_objects(choice, flag):
                     time.sleep(choice.delay_msg)
                     check_continue = input("Enter any key to continue: ")
                     if check_continue.lower().strip() == "quit":
-                        quit()
+                        sys.exit()
                 else:
                     print("---")
                     print("Looks like you have all the keys needed to open this door")
@@ -243,7 +246,9 @@ def check_objects(choice, flag):
                     time.sleep(choice.delay_msg)
                     check_continue = input("Enter any key to continue: ")
                     print("Congratulations! You have successfully escaped. Thank you for playing!\n")
-                    quit()
+                    time.sleep(choice.delay_msg)
+                    input("Enter any key to quit: ")
+                    sys.exit()
 
             # Check for special keys
             elif [choice.current_room, current_object] in choice.special_keys.values():

@@ -1,5 +1,6 @@
 import random
 import time
+import sys
 
 
 class Choice():
@@ -32,9 +33,7 @@ def create_items(choice):
     
     # Display details in the terminal. For testing purposes only. It should be commented out!
     # print(f"Secret room is: {choice.random_room}")
-    # print(f"List of objects: {choice.objects.get(choice.random_room)}")
     # print(f"Secret object is: {choice.random_object}")
-    # print(f"Secret object index is: {choice.random_object_index}")
 
 
 def load_file(file_name):
@@ -43,7 +42,7 @@ def load_file(file_name):
             lines = file.readlines()
     except:
         missing_file(file_name)
-        quit()
+        sys.exit()
     return lines
 
 
@@ -59,7 +58,7 @@ def print_layout(choice):
         print(line)
     check_continue = input("Enter any key to continue: ")
     if check_continue.lower().strip() == "quit":
-        quit()
+        sys.exit()
 
 
 # Start screen
@@ -73,7 +72,9 @@ def start_game(choice, start_delay, game_started, floor_plan):
             game_started = True
         elif choice.answer.lower().strip() == "no":
             print("Maybe next time. Bye")
-            quit()
+            time.sleep(choice.delay)
+            input("Enter any key to quit: ")
+            sys.exit()
         else:
             print("Invalid response. Please try again!")
             choice.answer = input("Do you want to play (yes/no)? ")
@@ -173,8 +174,10 @@ def check_objects(choice, flag):
     else:
         # Winning condition
         if choice.current_room == choice.random_room and (int(choice.answer.lower().strip()) - 1) == choice.random_object_index:
-            print(f"\nCongratulations! You have found the secret object [{choice.random_object}] in the [{choice.random_room}]\n")
-            quit()        
+            print(f"\nCongratulations! You have found the secret object [{choice.random_object}] in the [{choice.random_room}]\n")        
+            time.sleep(choice.delay)
+            input("Enter any key to quit: ")
+            sys.exit()
         elif choice.answer.lower().strip() == str(choice.end):
             flag = True
         elif int(choice.answer.lower().strip()) in list(range(1, choice.end)):
