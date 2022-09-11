@@ -11,9 +11,9 @@ Required Files: `secret_layout.txt`, `escape_layout.txt`, `responses.txt`
 Objective: Find the secret object to win the game  
 
 How to play:  
-1. Run `secret_object.py` or select `Hidden Object Game` from the executable file  
+1. Run `play_game.py` and select `Hidden Object Game`  
 2. Follow the instructions and input values into the terminal  
-3. Type "quit" at the main menu to exit the game  
+3. Type `quit` at the main menu to exit the game  
 4. The game will automatically terminate upon finding the secret object  
 
 The conditions have been randomly generated. This includes the:  
@@ -33,9 +33,9 @@ The code will automatically update these new additions
 Objective: You are trapped in a house. Find the secret items to unlock the exit  
 
 How to play:  
-1. Run `escape-room.py`  or select `Escape Room Game` from the executable file  
+1. Run `play_game.py` and select `Escape Room Game`  
 2. Follow the instructions and input values into the terminal  
-3. Type "quit" at the main menu to exit the game  
+3. Type `quit` at the main menu to exit the game  
 4. Find the secret items scattered around the house  
 5. After finding all the required items, use them to escape the house  
 6. The game will automatically terminate upon unlocking the exit  
@@ -43,7 +43,7 @@ How to play:
 Other Information:  
 - This is an advanced version of the Secret Object Game but with the introduction of extra objectives  
 - The starting and exit locations are pre-selected and is not randomly generated  
-- When interacting with objects in the game, the response is randomly selected from a list that is loaded from "responses.txt"  
+- When interacting with objects in the game, the response is randomly selected from a list that is loaded from `responses.txt`  
 - This text file can be appended to add more custom responses  
 - There will be a slight time delay when interacting with certain features of the game
 - The locations of the secret items (a.k.a keys) are randomly generated  
